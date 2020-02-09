@@ -27,7 +27,10 @@ public class BeerInventory extends BaseEntity{
         this.quantityOnHand = quantityOnHand;
     }
 
+    //beerId is unique in our control
     private UUID beerId;
+
+    //upc should be unique, but is not within our control
     private String upc;
     private Integer quantityOnHand = 0;
 }
