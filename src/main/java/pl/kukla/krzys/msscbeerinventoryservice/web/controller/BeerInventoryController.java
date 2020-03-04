@@ -9,9 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kukla.krzys.brewery.model.BeerInventoryDto;
 import pl.kukla.krzys.msscbeerinventoryservice.repository.BeerInventoryRepository;
 import pl.kukla.krzys.msscbeerinventoryservice.web.mapper.BeerInventoryMapper;
-import pl.kukla.krzys.msscbeerinventoryservice.web.model.BeerInventoryDto;
 
 import java.util.List;
 import java.util.UUID;

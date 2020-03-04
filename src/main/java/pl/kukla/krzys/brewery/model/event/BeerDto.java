@@ -1,4 +1,4 @@
-package pl.kukla.krzys.common.events;
+package pl.kukla.krzys.brewery.model.event;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
