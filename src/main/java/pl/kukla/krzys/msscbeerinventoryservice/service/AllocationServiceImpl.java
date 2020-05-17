@@ -3,6 +3,7 @@ package pl.kukla.krzys.msscbeerinventoryservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import pl.kukla.krzys.brewery.model.BeerInventoryDto;
 import pl.kukla.krzys.brewery.model.BeerOrderDto;
 import pl.kukla.krzys.brewery.model.BeerOrderLineDto;
 import pl.kukla.krzys.msscbeerinventoryservice.domain.BeerInventory;
@@ -23,7 +24,7 @@ public class AllocationServiceImpl implements AllocationService {
 
     @Override
     public Boolean allocateOrder(BeerOrderDto beerOrderDto) {
-        log.debug("Allocating OrderId: " + beerOrderDto.getId());
+        log.debug("Allocating OrderId: {}", beerOrderDto.getId());
 
         AtomicInteger totalOrdered = new AtomicInteger();
         AtomicInteger totalAllocated = new AtomicInteger();
@@ -38,9 +39,24 @@ public class AllocationServiceImpl implements AllocationService {
             totalAllocated.set(totalAllocated.get() + (beerOrderLine.getQuantityAllocated() != null ? beerOrderLine.getQuantityAllocated() : 0));
         });
 
-        log.debug("Total Ordered: " + totalOrdered.get() + " Total Allocated: " + totalAllocated.get());
+        log.debug("Total Ordered: {}, Total Allocated: {}", totalOrdered.get(), totalAllocated.get());
 
         return totalOrdered.get() == totalAllocated.get();
+    }
+
+    @Override
+    public void deallocateOrder(BeerOrderDto beerOrderDto) {
+        beerOrderDto.getBeerOrderLines().forEach(line->{
+            BeerInventory beerInventory = BeerInventory.builder()
+                .beerId(line.getId())
+                .upc(line.getUpc())
+                .quantityOnHand(line.getOrderQuantity())
+                .build();
+
+            BeerInventory savedBeerInventory = beerInventoryRepository.save(beerInventory);
+
+            log.debug("Saved Inventory for beerUpc->{}, inventoryId->{}",savedBeerInventory.getUpc(), savedBeerInventory.getId());
+        });
     }
 
     private void allocateBeerOrderLine(BeerOrderLineDto beerOrderLine) {
