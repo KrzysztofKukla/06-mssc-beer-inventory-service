@@ -3,7 +3,6 @@ package pl.kukla.krzys.msscbeerinventoryservice.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import pl.kukla.krzys.brewery.model.BeerInventoryDto;
 import pl.kukla.krzys.brewery.model.BeerOrderDto;
 import pl.kukla.krzys.brewery.model.BeerOrderLineDto;
 import pl.kukla.krzys.msscbeerinventoryservice.domain.BeerInventory;
@@ -46,7 +45,7 @@ public class AllocationServiceImpl implements AllocationService {
 
     @Override
     public void deallocateOrder(BeerOrderDto beerOrderDto) {
-        beerOrderDto.getBeerOrderLines().forEach(line->{
+        beerOrderDto.getBeerOrderLines().forEach(line -> {
             BeerInventory beerInventory = BeerInventory.builder()
                 .beerId(line.getId())
                 .upc(line.getUpc())
@@ -55,7 +54,7 @@ public class AllocationServiceImpl implements AllocationService {
 
             BeerInventory savedBeerInventory = beerInventoryRepository.save(beerInventory);
 
-            log.debug("Saved Inventory for beerUpc->{}, inventoryId->{}",savedBeerInventory.getUpc(), savedBeerInventory.getId());
+            log.debug("Saved Inventory for beerUpc->{}, inventoryId->{}", savedBeerInventory.getUpc(), savedBeerInventory.getId());
         });
     }
 
@@ -78,6 +77,9 @@ public class AllocationServiceImpl implements AllocationService {
                 beerOrderLine.setQuantityAllocated(allocatedQty + inventory);
                 beerInventory.setQuantityOnHand(0);
 
+            }
+
+            if (beerInventory.getQuantityOnHand() == 0) {
                 beerInventoryRepository.delete(beerInventory);
             }
         });
