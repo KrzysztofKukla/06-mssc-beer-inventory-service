@@ -5,6 +5,9 @@ spring:
   artemis:
     user: artemis
     password: simetraehcapa
+  #distributed tracing server
+  zipkin:
+    baseUrl: http://localhost:9411
 
 server:
   port: 8082
